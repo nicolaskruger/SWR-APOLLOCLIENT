@@ -1,8 +1,1 @@
-[
-    { 
-        "name": "Nícola Krüger",
-        "id": "nicolas",
-        "password": "123",
-        "email": "nicolas@email" 
-    }
-]
+[{"name":"Nícola Krüger","id":"nicolas","password":"123","email":"nicolas@email"},{"name":"Analise Burtet","id":"0.7953860474254224","password":"123","email":"ana@email"},{"name":"Analise Burtet","id":"7589747664406814","password":"123","email":"ana@email"},{"name":"Analise Burtet","id":"223","password":"123","email":"ana@email"}]
