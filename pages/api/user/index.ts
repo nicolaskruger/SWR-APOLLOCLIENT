@@ -1,7 +1,7 @@
-import { generateRoutes } from "@/utils/routes";
+import { generateRoutes } from "../../utils/routes";
 import { NextApiHandler } from "next";
-import { readFileConverter } from "@/utils/readFileConverter";
-import { writeFileConverter } from "@/utils/writeFileConverter";
+import { readFileConverter } from "../../utils/readFileConverter";
+import { writeFileConverter } from "../../utils/writeFileConverter";
 
 type User = {
   name: string;
