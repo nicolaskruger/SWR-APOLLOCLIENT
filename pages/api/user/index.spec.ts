@@ -310,4 +310,87 @@ describe("user api", () => {
       msg: "user delete with success",
     });
   });
+  it("path: user not found", () => {
+    const req = {
+      method: "PATCH",
+      body: {
+        id: "hinata",
+        name: "hinata uzumaki",
+      },
+    } as NextApiRequest;
+
+    const res = {} as NextApiResponse;
+
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    jest.mocked(readFileConverter).mockReturnValue([
+      {
+        name: "salkura",
+        id: "sakura",
+      },
+    ]);
+    apiHandler(req, res);
+
+    expect(status.mock.calls[0][0]).toBe(404);
+
+    expect(json.mock.calls[0][0]).toStrictEqual({
+      msg: "user not found",
+    });
+  });
+  it("path", () => {
+    const req = {
+      method: "PATCH",
+      body: {
+        id: "hinata",
+        name: "hinata uzumaki",
+      },
+    } as NextApiRequest;
+
+    const res = {} as NextApiResponse;
+
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    jest.mocked(readFileConverter).mockReturnValue([
+      {
+        name: "salkura",
+        id: "sakura",
+      },
+      {
+        name: "hinata hiuga",
+        id: "hinata",
+        email: "hinata@email.com",
+      },
+    ]);
+    apiHandler(req, res);
+
+    expect(jest.mocked(writeFileConverter).mock.calls[0][0]).toBe(
+      "./db/user.json"
+    );
+
+    expect(jest.mocked(writeFileConverter).mock.calls[0][1]).toStrictEqual([
+      {
+        name: "salkura",
+        id: "sakura",
+      },
+      {
+        name: "hinata uzumaki",
+        id: "hinata",
+        email: "hinata@email.com",
+      },
+    ]);
+
+    expect(json.mock.calls[0][0]).toStrictEqual({
+      msg: "update with success",
+    });
+  });
 });
