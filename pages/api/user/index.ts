@@ -1,5 +1,5 @@
 import { generateRoutes } from "../../utils/routes";
-import { NextApiHandler } from "next";
+import { NextApiHandler, NextApiRequest } from "next";
 import { readFileConverter } from "../../utils/readFileConverter";
 import { writeFileConverter } from "../../utils/writeFileConverter";
 
@@ -70,11 +70,27 @@ const put: NextApiHandler = (req, res) => {
   });
 };
 
+const deleteFunc: NextApiHandler = (req, res) => {
+  const { id } = req.query;
+  const users: User[] = readFileConverter("./db/user.json");
+
+  const user = users.find((u) => u.id === id);
+
+  if (!user) return res.status(404).json({ msg: "user not found" });
+
+  const newUsers = users.filter((u) => u.id !== id);
+
+  writeFileConverter("./db/user.json", newUsers);
+
+  return res.json({ msg: "user delete with success" });
+};
+
 const apiHandler: NextApiHandler = (req, res) => {
   const route = generateRoutes({
     GET: get,
     POST: post,
     PUT: put,
+    DELETE: deleteFunc,
   });
 
   return route(req, res);

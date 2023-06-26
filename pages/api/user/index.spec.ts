@@ -306,9 +306,8 @@ describe("user api", () => {
 
     expect(jest.mocked(writeFileConverter).mock.calls[0][1]).toStrictEqual([]);
 
-    expect(status.mock.calls[0][0]).toBe(404);
     expect(json.mock.calls[0][0]).toStrictEqual({
-      msg: "user not found",
+      msg: "user delete with success",
     });
   });
 });
