@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import apiHandler from ".";
 import { writeFileConverter } from "../../utils/writeFileConverter";
+import { readFileConverter } from "../../utils/readFileConverter";
+import { run } from "node:test";
 
 type User = {
   name: string;
@@ -29,7 +31,7 @@ jest.mock("../../utils/writeFileConverter", () => ({
 }));
 
 jest.mock("../../utils/readFileConverter", () => ({
-  readFileConverter: (value: string) => users,
+  readFileConverter: jest.fn((value: string) => users),
 }));
 describe("user api", () => {
   it("get", () => {
@@ -104,5 +106,93 @@ describe("user api", () => {
     users.forEach((a, index) => {
       testUser(a, expectedUser[index]);
     });
+  });
+  it("put: user not found", () => {
+    const req = {
+      method: "PUT",
+      body: {
+        id: "not found",
+        name: "nk",
+        email: "nk@email",
+        password: "123",
+      },
+    } as NextApiRequest;
+    const res = {} as NextApiResponse;
+
+    jest.mocked(readFileConverter).mockReturnValueOnce([]);
+
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    apiHandler(req, res);
+
+    expect(status.mock.calls[0][0]).toBe(404);
+    expect(json.mock.calls[0][0]).toStrictEqual({ msg: "user not found" });
+  });
+  it("put", () => {
+    const req = {
+      method: "PUT",
+      body: {
+        id: "nk",
+        name: "nk",
+        email: "nk@email",
+        password: "123",
+      },
+    } as NextApiRequest;
+    const res = {} as NextApiResponse;
+
+    jest.mocked(readFileConverter).mockReturnValueOnce([
+      {
+        id: "nk",
+        name: "nicolas",
+        email: "nicolas@email",
+        password: "123",
+      },
+      {
+        id: "ana",
+        name: "ana",
+        email: "ana@email",
+        password: "123",
+      },
+    ]);
+
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    apiHandler(req, res);
+
+    expect(status.mock.calls[0][0]).toBe(201);
+    expect(json.mock.calls[0][0]).toStrictEqual({
+      msg: "updated with success",
+    });
+
+    expect(writeFileConverter).toHaveBeenCalled();
+
+    expect(jest.mocked(writeFileConverter).mock.calls[0][0]).toBe(
+      "./db/user.json"
+    );
+
+    expect(jest.mocked(writeFileConverter).mock.calls[0][1]).toBe([
+      {
+        id: "nk",
+        name: "nk",
+        email: "nk@email",
+        password: "123",
+      },
+      {
+        id: "ana",
+        name: "ana",
+        email: "ana@email",
+        password: "123",
+      },
+    ]);
   });
 });
