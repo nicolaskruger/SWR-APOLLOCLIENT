@@ -34,6 +34,9 @@ jest.mock("../../utils/readFileConverter", () => ({
   readFileConverter: jest.fn((value: string) => users),
 }));
 describe("user api", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   it("get", () => {
     const req = { method: "GET" } as NextApiRequest;
     const json = jest.fn((obj: any) => {});
@@ -104,7 +107,7 @@ describe("user api", () => {
       },
     ];
     users.forEach((a, index) => {
-      testUser(a, expectedUser[index]);
+      testUser({ ...a }, { ...expectedUser[index] });
     });
   });
   it("put: user not found", () => {
@@ -133,6 +136,7 @@ describe("user api", () => {
     expect(status.mock.calls[0][0]).toBe(404);
     expect(json.mock.calls[0][0]).toStrictEqual({ msg: "user not found" });
   });
+
   it("put", () => {
     const req = {
       method: "PUT",
@@ -180,7 +184,7 @@ describe("user api", () => {
       "./db/user.json"
     );
 
-    expect(jest.mocked(writeFileConverter).mock.calls[0][1]).toBe([
+    expect(jest.mocked(writeFileConverter).mock.calls[0][1]).toStrictEqual([
       {
         id: "nk",
         name: "nk",

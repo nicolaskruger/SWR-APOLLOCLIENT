@@ -12,6 +12,8 @@ type User = {
 
 const keysOfUser: (keyof User)[] = ["email", "id", "name", "password"];
 
+const invalidateUserFunc = (user: User) =>
+  keysOfUser.some((key) => !user[key as keyof User]);
 const post: NextApiHandler = (req, res) => {
   const users: User[] = readFileConverter("./db/user.json");
   const body: Omit<User, "id"> = req.body;
@@ -21,7 +23,7 @@ const post: NextApiHandler = (req, res) => {
     id: `${Math.random()}`.slice(2, 5),
   };
 
-  const invalidUser = keysOfUser.some((key) => !newUser[key as keyof User]);
+  const invalidUser = invalidateUserFunc(newUser);
 
   if (invalidUser) return res.status(400).json({ msg: "incomplete user" });
 
@@ -38,10 +40,41 @@ const get: NextApiHandler = (req, res) => {
   });
 };
 
+const put: NextApiHandler = (req, res) => {
+  const users: User[] = readFileConverter("./db/user.json");
+
+  const user: User = req.body;
+
+  const invalidUser = invalidateUserFunc(user);
+
+  if (invalidUser)
+    return res.status(400).json({
+      msg: "invalid user",
+    });
+  const currentUser = users.find(({ id }) => user.id === id);
+
+  if (!currentUser)
+    return res.status(404).json({
+      msg: "user not found",
+    });
+
+  const newUsers = users.map((oldUser) => {
+    if (oldUser.id === user.id) return user;
+    return oldUser;
+  });
+
+  writeFileConverter("./db/user.json", newUsers);
+
+  return res.status(201).json({
+    msg: "updated with success",
+  });
+};
+
 const apiHandler: NextApiHandler = (req, res) => {
   const route = generateRoutes({
     GET: get,
     POST: post,
+    PUT: put,
   });
 
   return route(req, res);
