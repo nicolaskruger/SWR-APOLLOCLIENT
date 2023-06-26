@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import apiHandler from ".";
 import { writeFileConverter } from "../../utils/writeFileConverter";
 import { readFileConverter } from "../../utils/readFileConverter";
-import { run } from "node:test";
 
 type User = {
   name: string;
@@ -136,7 +135,46 @@ describe("user api", () => {
     expect(status.mock.calls[0][0]).toBe(404);
     expect(json.mock.calls[0][0]).toStrictEqual({ msg: "user not found" });
   });
+  it("put: do not update when miss parameter", () => {
+    const req = {
+      method: "PUT",
+      body: {
+        id: "nk",
+        email: "nk@email",
+        password: "123",
+      },
+    } as NextApiRequest;
+    const res = {} as NextApiResponse;
 
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    jest.mocked(readFileConverter).mockReturnValueOnce([
+      {
+        id: "nk",
+        name: "nicolas",
+        email: "nicolas@email",
+        password: "123",
+      },
+      {
+        id: "ana",
+        name: "ana",
+        email: "ana@email",
+        password: "123",
+      },
+    ]);
+
+    apiHandler(req, res);
+
+    expect(status.mock.calls[0][0]).toBe(400);
+    expect(json.mock.calls[0][0]).toStrictEqual({
+      msg: "invalid user",
+    });
+  });
   it("put", () => {
     const req = {
       method: "PUT",
