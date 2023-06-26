@@ -237,4 +237,78 @@ describe("user api", () => {
       },
     ]);
   });
+
+  it("delete: should not delete user when not found", () => {
+    const req = {
+      method: "DELETE",
+      query: {},
+    } as NextApiRequest;
+
+    req.query.id = "1";
+
+    const res = {} as NextApiResponse;
+
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    jest.mocked(readFileConverter).mockReturnValueOnce([
+      {
+        id: "ana",
+        name: "ana",
+        email: "ana@email",
+        password: "123",
+      },
+    ]);
+
+    apiHandler(req, res);
+
+    expect(status.mock.calls[0][0]).toBe(404);
+    expect(json.mock.calls[0][0]).toStrictEqual({
+      msg: "user not found",
+    });
+  });
+
+  it("delete", () => {
+    const req = {
+      method: "DELETE",
+      query: {},
+    } as NextApiRequest;
+
+    req.query.id = "ana";
+
+    const res = {} as NextApiResponse;
+
+    const json = jest.fn((obj: any) => {});
+
+    const status = jest.fn((status: Number) => res);
+
+    res.json = json;
+    res.status = status;
+
+    jest.mocked(readFileConverter).mockReturnValueOnce([
+      {
+        id: "ana",
+        name: "ana",
+        email: "ana@email",
+        password: "123",
+      },
+    ]);
+
+    apiHandler(req, res);
+
+    expect(jest.mocked(writeFileConverter).mock.calls[0][0]).toBe(
+      "./db/user.json"
+    );
+
+    expect(jest.mocked(writeFileConverter).mock.calls[0][1]).toStrictEqual([]);
+
+    expect(status.mock.calls[0][0]).toBe(404);
+    expect(json.mock.calls[0][0]).toStrictEqual({
+      msg: "user not found",
+    });
+  });
 });
