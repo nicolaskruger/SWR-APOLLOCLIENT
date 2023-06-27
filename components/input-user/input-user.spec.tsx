@@ -24,6 +24,10 @@ describe("<InputUser/>", () => {
     render(<InputUser />);
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should not send new user when input is empty", () => {
     const { button } = getInputs();
 
@@ -41,22 +45,22 @@ describe("<InputUser/>", () => {
       throw new Error();
     });
 
-    user.type(input, "name");
+    await user.type(input, "name");
 
-    expect(errorMsg.getAttribute("data-show")).toBe(false);
+    expect(errorMsg.getAttribute("data-show")).toBe("false");
 
-    user.click(button);
+    await user.click(button);
 
-    await delay(1000);
+    await delay(500);
 
-    expect(errorMsg.getAttribute("data-show")).toBe(true);
+    expect(errorMsg.getAttribute("data-show")).toBe("true");
 
     await delay(3000);
 
-    expect(errorMsg.getAttribute("data-show")).toBe(false);
+    expect(errorMsg.getAttribute("data-show")).toBe("false");
   });
 
-  it("should send new user", () => {
+  it("should send new user", async () => {
     const { button, input } = getInputs();
     const mockAxios = jest.mocked(axios);
 
@@ -66,14 +70,14 @@ describe("<InputUser/>", () => {
       },
     });
 
-    user.type(input, "name");
+    await user.type(input, "name");
 
-    user.click(button);
+    await user.click(button);
 
     expect(mockAxios.post).toBeCalled();
 
     expect(mockAxios.post.mock.calls[0][0]).toBe("/api/user");
-    expect(mockAxios.post.mock.calls[0][1]).toBe({
+    expect(mockAxios.post.mock.calls[0][1]).toStrictEqual({
       name: "name",
       email: "name@email.com",
     });
