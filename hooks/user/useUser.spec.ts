@@ -1,4 +1,5 @@
 import useSwr, { SWRResponse } from "swr";
+import { useUser } from "./useUser";
 
 const myUser = {
   email: "user@email",
@@ -21,11 +22,10 @@ describe("useUser", () => {
 
       return response;
     });
+    const { isError, isLoading, user } = useUser("user");
+
+    expect(isError).toBe(false);
+    expect(isLoading).toBe(false);
+    expect(user).toStrictEqual(myUser);
   });
-
-  const { isError, isLoading, user } = useUser("user");
-
-  expect(isError).toBe(false);
-  expect(isLoading).toBe(false);
-  expect(user).toStrictEqual(myUser);
 });
