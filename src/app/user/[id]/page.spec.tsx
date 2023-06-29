@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { useUser } from "../../../../hooks/user/useUser";
 import UserById from "./page";
+import "@testing-library/jest-dom";
 
 jest.mock("../../../../hooks/user/useUser");
 
