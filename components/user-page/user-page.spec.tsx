@@ -1,34 +1,28 @@
 import { render, screen } from "@testing-library/react";
 import axios from "axios";
 import { UserPage } from "./user-page";
+import { cache } from "swr/_internal";
+import { SWRConfig } from "swr";
 
 jest.mock("axios");
-
-type User = {
-  name: string;
-  email: string;
-  id: string;
-  password: string;
-};
-
-type SwrMock = {
-  data: User[];
-  isLoading: boolean;
-  error: boolean;
-};
 
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 describe("<UserPage/>", () => {
-  it("should render an error msg when error", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it("should render an error msg when error", async () => {
     jest.mocked(axios).get.mockImplementation(() => {
       throw new Error();
     });
-
-    render(<UserPage />);
-
+    render(
+      <SWRConfig value={{ dedupingInterval: 0 }}>
+        <UserPage />
+      </SWRConfig>
+    );
+    await delay(1000);
     const p = screen.getByTestId<HTMLParagraphElement>("p-error-message");
-
     expect(p.textContent).toBe("can't fetch");
   });
   it("should render an loading mdg when loading", () => {
@@ -36,13 +30,17 @@ describe("<UserPage/>", () => {
       await delay(3000);
     });
 
-    render(<UserPage />);
+    render(
+      <SWRConfig value={{ dedupingInterval: 0 }}>
+        <UserPage />
+      </SWRConfig>
+    );
 
     const p = screen.getByTestId<HTMLParagraphElement>("p-loading");
 
     expect(p.textContent).toBe("loading...");
   });
-  it("should render a component fetch is correct", () => {
+  it("should render a component fetch is correct", async () => {
     jest.mocked(axios).get.mockResolvedValue({
       data: [
         {
@@ -53,9 +51,15 @@ describe("<UserPage/>", () => {
         },
       ],
     });
-    render(<UserPage />);
+    render(
+      <SWRConfig value={{ dedupingInterval: 0 }}>
+        <UserPage />
+      </SWRConfig>
+    );
 
-    const user = screen.getAllByTestId("ul-user");
+    await delay(1000);
+
+    const user = screen.getAllByTestId("li-user");
 
     expect(user.length).toBe(1);
   });
