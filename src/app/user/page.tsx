@@ -1,8 +1,9 @@
 "use client";
-import useSwr from "swr";
+
+import { UserPage } from "../../../components/user-page/user-page";
 
 const Page = () => {
-  const { data, error, isLoading } = useSwr("/api/user");
-
-  return <div></div>;
+  return <UserPage />;
 };
+
+export default Page;
