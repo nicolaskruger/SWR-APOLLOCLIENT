@@ -24,6 +24,9 @@ describe("loginUserSWRApi", () => {
     const json = jest.fn((obj: any) => {});
     const status = jest.fn((value: number) => res);
 
+    res.status = status;
+    res.json = json;
+
     return { res, json, status };
   };
 
@@ -52,6 +55,6 @@ describe("loginUserSWRApi", () => {
 
     expect(status).toBeCalledWith(200);
 
-    expect(json.mock.calls[0][0]).toContain("token");
+    expect(json.mock.calls[0][0]).toHaveProperty("token");
   });
 });
