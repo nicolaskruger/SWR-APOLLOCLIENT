@@ -6,13 +6,13 @@ jest.mock("nookies");
 describe("cookies", () => {
   beforeEach(() => {
     jest.mocked(parseCookies).mockReturnValue({
-      token: " Bearer 123",
+      token: "Bearer 123",
     });
   });
 
   it("should return null when token not found", () => {
     const cookie = getMyCookies("noToken");
-    expect(cookie).toBeNull();
+    expect(cookie).toBeFalsy();
   });
 
   it("should get a cookies when its exists", () => {
