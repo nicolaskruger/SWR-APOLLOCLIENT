@@ -122,7 +122,11 @@ describe("<Login />", () => {
   it("should show an error msg when have error", () => {
     mockUseLogin({
       error: {
-        msg: "error on login",
+        response: {
+          data: {
+            msg: "error on login",
+          },
+        },
       },
     });
     render(<Login />);

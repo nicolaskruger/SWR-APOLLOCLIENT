@@ -32,17 +32,26 @@ const Page = () => {
 
     if (!password || !email) return;
 
-    await trigger({
-      email,
-      password,
-    });
+    try {
+      await trigger({
+        email,
+        password,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <div>
-      <form action="submit" onSubmit={handleSubmit}>
+    <div className="flex min-h-screen justify-center items-center">
+      <form
+        className="flex flex-col space-y-5"
+        action="submit"
+        onSubmit={handleSubmit}
+      >
         <label htmlFor="email">email</label>
         <input
+          className="text-slate-900"
           data-testid="input-email-login"
           type="text"
           id="email"
@@ -51,8 +60,9 @@ const Page = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <label htmlFor="password">password</label>
-        <div>
+        <div className="flex space-x-5">
           <input
+            className="text-slate-900"
             data-testid="input-password-login"
             type={showPassword ? "text" : "password"}
             id="password"
@@ -63,6 +73,7 @@ const Page = () => {
           <button
             onClick={handleToggleVisibility}
             data-testid="button-toggle-visibility"
+            className="w-10"
             type="button"
           >
             {!showPassword ? "show" : "hide"}
@@ -71,8 +82,12 @@ const Page = () => {
         <button data-testid="button-form-login" type="submit">
           {isMutating ? <Spinner /> : "login"}
         </button>
-        <p data-visibility={Boolean(error)} data-testid="p-error-login">
-          {error?.msg}
+        <p
+          data-visibility={Boolean(error)}
+          className="text-red-700 data-[visibility=true]:visible data-[visibility=false]:invisible"
+          data-testid="p-error-login"
+        >
+          {error?.response?.data.msg || "error"}
         </p>
       </form>
     </div>

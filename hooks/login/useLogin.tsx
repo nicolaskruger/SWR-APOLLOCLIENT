@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import useSWRMutation from "swr/mutation";
 
 export type LoginProps = {
@@ -11,7 +11,12 @@ const login = async (url: string, { arg }: { arg: LoginProps }) => {
 };
 
 const useLogin = () => {
-  return useSWRMutation("/api/swr/user/login", login);
+  return useSWRMutation<
+    { token: string },
+    AxiosError<{ msg: string }>,
+    "/api/swr/user/login",
+    LoginProps
+  >("/api/swr/user/login", login);
 };
 
 export { useLogin };
