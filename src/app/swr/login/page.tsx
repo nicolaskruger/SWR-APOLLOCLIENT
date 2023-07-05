@@ -1,7 +1,8 @@
+"use client";
 import { FormEvent, useEffect, useState } from "react";
 import { useLogin } from "../../../../hooks/login/useLogin";
 import { Spinner } from "../../../../components/spinner/spinner";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useToken } from "../../../../hooks/token/useToken";
 
 const Page = () => {

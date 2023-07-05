@@ -9,7 +9,7 @@ import { useToken } from "../../../../hooks/token/useToken";
 
 jest.mock("../../../../hooks/login/useLogin");
 
-jest.mock("next/router", () => require("next-router-mock"));
+jest.mock("next/navigation", () => require("next-router-mock"));
 
 jest.mock("../../../../hooks/token/useToken");
 
