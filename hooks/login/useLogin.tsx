@@ -1,7 +1,7 @@
 import axios from "axios";
 import useSWRMutation from "swr/mutation";
 
-type LoginProps = {
+export type LoginProps = {
   email: string;
   password: string;
 };
