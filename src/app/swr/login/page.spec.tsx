@@ -4,10 +4,14 @@ import user from "@testing-library/user-event";
 import { LoginProps, useLogin } from "../../../../hooks/login/useLogin";
 import { SWRMutationResponse } from "swr/mutation";
 import mockRouter from "next-router-mock";
+import "@testing-library/jest-dom";
+import { useToken } from "../../../../hooks/token/useToken";
 
 jest.mock("../../../../hooks/login/useLogin");
 
 jest.mock("next/router", () => require("next-router-mock"));
+
+jest.mock("../../../../hooks/token/useToken");
 
 type MockUseLoginType = SWRMutationResponse<
   { token: string },
@@ -72,6 +76,8 @@ describe("<Login />", () => {
 
   beforeEach(() => {
     mockRouter.push("/swr/login");
+    const setToken = jest.fn();
+    jest.mocked(useToken).mockReturnValue(["", setToken]);
   });
 
   afterEach(() => {
@@ -96,7 +102,7 @@ describe("<Login />", () => {
     expect(inputPassword).toBeInTheDocument();
     expect(pElement).toBeInTheDocument();
   });
-  it("should hide and show the password", () => {
+  it("should hide and show the password", async () => {
     mockUseLogin({});
     render(<Login />);
 
@@ -106,7 +112,7 @@ describe("<Login />", () => {
 
     expect(inputPassword.type).toBe("password");
 
-    user.click(buttonToggleVisibility);
+    await user.click(buttonToggleVisibility);
 
     expect(buttonToggleVisibility.textContent).toBe("hide");
 
@@ -124,6 +130,7 @@ describe("<Login />", () => {
     const { pElement } = getAllInfo();
 
     expect(pElement).toHaveTextContent("error on login");
+    expect(pElement.getAttribute("data-visibility")).toBe("true");
   });
 
   it("should render an spinner when is mutation", () => {
@@ -143,10 +150,55 @@ describe("<Login />", () => {
         token: "Bearer 123",
       },
     });
+    const setToken = jest.fn();
+    jest.mocked(useToken).mockReturnValue(["", setToken]);
+
     render(<Login />);
+
+    expect(setToken).toBeCalled();
+
+    expect(setToken).toBeCalledWith("Bearer 123");
 
     expect(mockRouter).toMatchObject({
       asPath: "/swr/blog",
+    });
+  });
+  it("should no render login when miss email or pass word", async () => {
+    const trigger = jest.fn();
+
+    mockUseLogin({
+      trigger,
+    });
+
+    render(<Login />);
+    const { buttonElement } = getAllInfo();
+
+    await user.click(buttonElement);
+
+    expect(trigger).not.toBeCalled();
+  });
+
+  it("should login when user and password set", async () => {
+    const trigger = jest.fn();
+
+    mockUseLogin({
+      trigger,
+    });
+
+    render(<Login />);
+    const { buttonElement, inputEmail, inputPassword } = getAllInfo();
+
+    await user.type(inputEmail, "nicolas@email.com");
+
+    await user.type(inputPassword, "123");
+
+    await user.click(buttonElement);
+
+    expect(trigger).toBeCalled();
+
+    expect(trigger.mock.calls[0][0]).toStrictEqual({
+      email: "nicolas@email.com",
+      password: "123",
     });
   });
 });
