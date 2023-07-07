@@ -4,6 +4,14 @@ import { useRedirectIfNotLogged } from "./useRedirectIfNotLoggedIn";
 import { useMe } from "../me/useMe";
 import { SWRResponse } from "swr";
 import { AxiosError } from "axios";
+import React from "react";
+import { render } from "@testing-library/react";
+
+const Redirect = () => {
+  useRedirectIfNotLogged();
+
+  return <div></div>;
+};
 
 jest.mock("next/navigation");
 
@@ -52,7 +60,7 @@ describe("useRedirectIfNotLoggedIn", () => {
 
     mockUseMe({ error } as SWRResponse);
 
-    useRedirectIfNotLogged();
+    render(<Redirect />);
 
     expect(push).toBeCalled();
     expect(push).toBeCalledWith("/swr/login");
@@ -62,7 +70,7 @@ describe("useRedirectIfNotLoggedIn", () => {
 
     mockUseMe({ data: {} as User });
 
-    useRedirectIfNotLogged();
+    render(<Redirect />);
     expect(push).not.toBeCalled();
   });
 });
