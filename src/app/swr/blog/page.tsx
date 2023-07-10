@@ -1,3 +1,4 @@
+"use client";
 import { Container } from "../../../../components/container/container";
 import { Me } from "../../../../components/me/me";
 import { NewPost } from "../../../../components/new-post/new-post";
