@@ -25,6 +25,7 @@ describe("postRepository", () => {
 
     const writeFileMocked = jest.mocked(writeFileConverter);
 
+    expect(writeFileMocked.mock.calls[0][0]).toStrictEqual("./db/post.json");
     expect(writeFileMocked.mock.calls[0][1]).toStrictEqual([post]);
   });
 });

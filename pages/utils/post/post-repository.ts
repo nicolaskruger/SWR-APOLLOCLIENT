@@ -1,6 +1,10 @@
+import { readFileConverter } from "../readFileConverter";
+import { writeFileConverter } from "../writeFileConverter";
+
 const postRepository = {
   addPost: (post: Post) => {
-    throw new Error("not implemented");
+    const posts = readFileConverter("./db/post.json") as Post[];
+    writeFileConverter("./db/post.json", [...posts, post]);
   },
 };
 
