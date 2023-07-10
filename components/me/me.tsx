@@ -13,9 +13,13 @@ const Me = () => {
   const { email, name, url } = data;
 
   return (
-    <div>
-      <img data-testid="img-me" src={url} alt="no img" />
-
+    <div className="py-5 flex justify-between items-center">
+      <img
+        className="w-40 h-40 object-cover rounded-full"
+        data-testid="img-me"
+        src={url}
+        alt="no img"
+      />
       <div>
         <p data-testid="p-me-name">{name}</p>
         <p data-testid="p-me-email">{email}</p>
