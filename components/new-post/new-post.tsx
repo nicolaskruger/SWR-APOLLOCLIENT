@@ -28,15 +28,18 @@ const NewPost = () => {
   };
 
   return (
-    <form action="submit" onSubmit={handleSubmit}>
+    <form className="flex flex-col" action="submit" onSubmit={handleSubmit}>
       <textarea
+        className="h-40 text-slate-900"
         value={text}
         onChange={(e) => setText(e.target.value)}
         data-testid="input-new-post"
         name="post"
         id="post"
       />
-      <button data-testid="button-new-post">post</button>
+      <button className="bg-slate-600 py-2" data-testid="button-new-post">
+        post
+      </button>
       <PError data-testid="p-new-post-error" isError={Boolean(error)}>
         {error?.response?.data.msg}
       </PError>
