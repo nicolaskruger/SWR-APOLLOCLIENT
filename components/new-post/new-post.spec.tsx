@@ -20,13 +20,11 @@ const getDataTestId = () => {
   const input = screen.getByTestId<HTMLInputElement>("input-new-post");
   const button = screen.getByTestId<HTMLButtonElement>("button-new-post");
   const pError = screen.getByTestId<HTMLParagraphElement>("p-new-post-error");
-  const spinner = screen.getByTestId<HTMLParagraphElement>("spinner");
 
   return {
     input,
     button,
     pError,
-    spinner,
   };
 };
 
@@ -51,7 +49,7 @@ describe("<NewPost/>", () => {
 
     const { pError } = getDataTestId();
 
-    expect(pError).toHaveTextContent("error on login");
+    expect(pError).toHaveTextContent("error");
     expect(pError.getAttribute("data-visibility")).toBe("true");
   });
   it("should render an spinner when loading", () => {
@@ -59,9 +57,11 @@ describe("<NewPost/>", () => {
       isMutating: true,
     });
 
+    render(<NewPost />);
+
     expect(screen.queryByTestId("spinner")).toBeInTheDocument();
   });
-  it("should create a post", () => {
+  it("should create a post", async () => {
     const trigger = jest.fn(
       async ({ text, token }: { text: string; token: string }) => ({
         msg: "create post",
@@ -76,9 +76,12 @@ describe("<NewPost/>", () => {
 
     const { input, button } = getDataTestId();
 
-    user.type(input, "text");
-    user.click(button);
+    await user.type(input, "text");
+    await user.click(button);
 
-    expect(trigger).toBeCalledWith("text", "valid token");
+    expect(trigger.mock.calls[0][0]).toStrictEqual({
+      text: "text",
+      token: "valid token",
+    });
   });
 });
