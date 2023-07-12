@@ -7,6 +7,10 @@ jest.mock("../readFileConverter");
 jest.mock("../writeFileConverter");
 
 describe("postRepository", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("should post a post", () => {
     const post: Post = {
       date: new Date().toISOString(),
@@ -40,12 +44,16 @@ describe("postRepository", () => {
             id: i.toString(),
             date: date,
             userId: "1",
+            text: "text",
           } as Post)
       );
 
     const user = {
       name: "name",
       id: "1",
+      email: "email",
+      password: "123",
+      url: "url",
     } as User;
 
     const readFileMock = jest.mocked(readFileConverter);
@@ -66,9 +74,12 @@ describe("postRepository", () => {
           ({
             id: (i + 3).toString(),
             date: date,
+            text: "text",
             user: {
               id: "1",
               name: "name",
+              email: "email",
+              url: "url",
             },
           } as PostAllInfo)
       );
