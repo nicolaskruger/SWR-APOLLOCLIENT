@@ -70,6 +70,11 @@ describe("postApi", () => {
 
     req.method = "GET";
 
+    req.query = {
+      page: "1",
+      limit: "3",
+    };
+
     req.headers = {
       authorization: "invalid token",
     };
@@ -107,7 +112,13 @@ describe("postApi", () => {
 
     const pages = [{ id: "1" }, { id: "2" }, { id: "3" }];
 
-    jest.mocked(postRepository).getPaginatedPost.mockReturnValue(pages as any);
+    const postRepositoryMock = jest.mocked(postRepository);
+
+    postRepositoryMock.getPaginatedPost.mockReturnValue(pages as any);
+
+    postApi(req, res);
+
+    expect(postRepositoryMock.getPaginatedPost).toBeCalledWith(1, 3);
 
     expect(status).toBeCalledWith(200);
     expect(json.mock.calls[0][0]).toStrictEqual(pages);

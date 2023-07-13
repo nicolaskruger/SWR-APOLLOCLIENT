@@ -24,9 +24,26 @@ const post: NextApiHandler = (req, res) => {
   }
 };
 
+const get: NextApiHandler = (req, res) => {
+  const token = req.headers.authorization || "";
+
+  const { page, limit } = req.query;
+
+  try {
+    meRepository.decodeToken(token);
+
+    const pages = postRepository.getPaginatedPost(Number(page), Number(limit));
+
+    return res.status(200).json(pages);
+  } catch (error) {
+    return res.status(401).json({ msg: "invalid token" });
+  }
+};
+
 const postApi: NextApiHandler = (req, res) => {
   const route = generateRoutes({
     POST: post,
+    GET: get,
   });
 
   return route(req, res);
