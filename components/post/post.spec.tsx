@@ -4,7 +4,7 @@ import { screen } from "@testing-library/dom";
 import { render } from "@testing-library/react";
 import { Post } from "./post";
 import user from "@testing-library/user-event";
-import { data } from "autoprefixer";
+import "@testing-library/jest-dom";
 
 jest.mock("../../hooks/get-post-infinite/useGetPostInfinit");
 
@@ -14,6 +14,11 @@ export const mockGetPostInfinite = ({
   isLoading,
   isValidating,
   size,
+  concatData,
+  isEmpty,
+  isLoadingMore,
+  isReachingEnd,
+  isRefreshing,
 }: Partial<
   Omit<ReturnType<typeof useGetPostInfinite>, "mutate" | "setSize">
 >) => {
@@ -26,6 +31,11 @@ export const mockGetPostInfinite = ({
     isValidating: isValidating || false,
     size: size || 1,
     setSize,
+    concatData: concatData || [],
+    isEmpty: isEmpty || false,
+    isLoadingMore: isLoadingMore || false,
+    isReachingEnd: isReachingEnd || false,
+    isRefreshing: isRefreshing || false,
   } as any);
 
   return {
@@ -48,20 +58,20 @@ describe("<Post/>", () => {
 
     expect(spinner).toBeInTheDocument();
   });
-  it("should render more post when click on load more button", () => {
+  it("should render more post when click on load more button", async () => {
     const { setSize } = mockGetPostInfinite({});
 
     render(<Post />);
 
     const { button } = getInputs();
 
-    user.click(button);
+    await user.click(button);
 
     expect(setSize).toBeCalledWith(2);
   });
 
   it("should stop render load more button when post come to an end", () => {
-    mockGetPostInfinite({ data: [[{} as any]] });
+    mockGetPostInfinite({ isReachingEnd: true });
 
     render(<Post />);
 
