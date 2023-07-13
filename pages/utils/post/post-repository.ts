@@ -21,7 +21,7 @@ const postRepository = {
 
     const allInfoPost: PostAllInfo[] = posts
       .sort((a, b) => b.date.localeCompare(a.date))
-      .slice((page - 1) * limit, page * limit)
+      .slice(page * limit, (page + 1) * limit)
       .map((p) => {
         const user = userDic[p.userId];
 
