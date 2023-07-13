@@ -65,4 +65,51 @@ describe("postApi", () => {
 
     expect(status).toBeCalledWith(201);
   });
+  it("should not get posts when token is invalid", () => {
+    const req = {} as NextApiRequest;
+
+    req.method = "GET";
+
+    req.headers = {
+      authorization: "invalid token",
+    };
+
+    const { json, res, status } = mockRes();
+
+    jest.mocked(meRepository).decodeToken.mockImplementation(() => {
+      throw new Error("invalid token");
+    });
+
+    postApi(req, res);
+
+    expect(jest.mocked(postRepository).getPaginatedPost).not.toBeCalled();
+    expect(json.mock.calls[0][0]).toStrictEqual({ msg: "invalid token" });
+
+    expect(status).toBeCalledWith(401);
+  });
+  it("should get posts", () => {
+    const req = {} as NextApiRequest;
+
+    req.method = "GET";
+
+    req.query = {
+      page: "1",
+      limit: "3",
+    };
+
+    req.headers = {
+      authorization: "valid token",
+    };
+
+    const { json, res, status } = mockRes();
+
+    jest.mocked(meRepository).decodeToken.mockReturnValue({} as User);
+
+    const pages = [{ id: "1" }, { id: "2" }, { id: "3" }];
+
+    jest.mocked(postRepository).getPaginatedPost.mockReturnValue(pages as any);
+
+    expect(status).toBeCalledWith(200);
+    expect(json.mock.calls[0][0]).toStrictEqual(pages);
+  });
 });
