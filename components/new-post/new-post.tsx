@@ -3,9 +3,12 @@ import { useCreatePost } from "../../hooks/create-post/useCreatePost";
 import { Spinner } from "../spinner/spinner";
 import { PError } from "../p-error/p-error";
 import { useToken } from "../../hooks/token/useToken";
+import { useGetPostInfinite } from "../../hooks/get-post-infinite/useGetPostInfinit";
 
 const NewPost = () => {
   const { error, isMutating, trigger } = useCreatePost();
+
+  const { mutate } = useGetPostInfinite();
 
   const [token] = useToken();
 
@@ -23,6 +26,8 @@ const NewPost = () => {
       text,
       token,
     });
+
+    await mutate();
 
     setText("");
   };

@@ -6,10 +6,13 @@ const Post = () => {
     useGetPostInfinite();
 
   const posts = concatData.map(({ date, text, user, id }) => (
-    <div key={id}>
-      <p>{user.name}</p>
-      <p>{date}</p>
+    <div className="mt-4 flex flex-col space-y-2" key={id}>
+      <div>
+        <img src="" alt="" />
+        <p>{user.name}</p>
+      </div>
       <p>{text}</p>
+      <p>{date}</p>
     </div>
   ));
 
@@ -17,8 +20,11 @@ const Post = () => {
     <div>
       {posts}
       <button
+        className="bg-slate-700 py-2 px-5 disabled:invisible"
         data-testid="button-post-load-more"
-        onClick={() => setSize(size + 1)}
+        onClick={() => {
+          setSize(size + 1);
+        }}
         disabled={isReachingEnd}
       >
         load more
