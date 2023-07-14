@@ -1,10 +1,18 @@
+import { readFileConverter } from "../readFileConverter";
+import jwt from "jsonwebtoken";
+
 const loginRepository = {
   login: (email: string, password: string) => {
-    throw new Error("not implemented");
+    const users: User[] = readFileConverter("./db/user.json");
 
-    return {
-      token: "invalid",
-    };
+    const findUser = users.find((listUser) => listUser.email === email);
+
+    if (!findUser || findUser.password !== password)
+      throw new Error("email or password invalid");
+
+    const token = jwt.sign({ id: findUser.id }, "shh");
+
+    return { token };
   },
 };
 
