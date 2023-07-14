@@ -10,6 +10,8 @@
     "test": "jest --watch"
   },
   "dependencies": {
+    "@apollo/server": "^4.7.5",
+    "@as-integrations/next": "^2.0.1",
     "@types/node": "20.3.1",
     "@types/react": "18.2.13",
     "@types/react-dom": "18.2.6",
@@ -17,6 +19,8 @@
     "axios": "^1.4.0",
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",
+    "graphql": "^16.7.1",
+    "graphql-tag": "^2.12.6",
     "jsonwebtoken": "^9.0.0",
     "next": "13.4.7",
     "next-router-mock": "^0.9.7",
