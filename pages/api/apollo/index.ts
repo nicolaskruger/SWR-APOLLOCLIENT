@@ -1,16 +1,23 @@
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import { gql } from "graphql-tag";
+import { loginRepository } from "../../utils/login/login-repository";
 
 const resolvers = {
   Query: {
-    hello: () => "world",
+    login: (
+      value: string,
+      { email, password }: { email: string; password: string }
+    ) => loginRepository.login(email, password),
   },
 };
 
 const typeDefs = gql`
+  type Token {
+    token: String
+  }
   type Query {
-    hello: String
+    login(email: String, password: String): Token
   }
 `;
 
