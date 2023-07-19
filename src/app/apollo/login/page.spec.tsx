@@ -36,7 +36,7 @@ const mockUseRoute = () => {
 describe("<Login/>", () => {
   it("should render an spinner when loading", () => {
     mockUseLoginGql({ loading: true });
-
+    mockUseRoute();
     render(<Login />);
 
     const spinner = screen.queryByTestId("spinner");
@@ -45,7 +45,7 @@ describe("<Login/>", () => {
   });
   it("should render an error message on error", () => {
     mockUseLoginGql({ error: true });
-
+    mockUseRoute();
     render(<Login />);
 
     const error = screen.queryByTestId("p-error-login");
