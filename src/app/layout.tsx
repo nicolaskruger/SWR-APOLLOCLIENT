@@ -1,4 +1,3 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import "./globals.css";
 import { Inter } from "next/font/google";
 
@@ -14,16 +13,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const client = new ApolloClient({
-    uri: "/api/apollo",
-    cache: new InMemoryCache(),
-  });
-
   return (
     <html lang="en">
-      <ApolloProvider client={client}>
-        <body className={inter.className}>{children}</body>
-      </ApolloProvider>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

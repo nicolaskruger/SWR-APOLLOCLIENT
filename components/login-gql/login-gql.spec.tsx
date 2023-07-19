@@ -1,12 +1,11 @@
-import { ApolloError } from "@apollo/client";
-import { useLoginGql } from "../../../../hooks/login-gql/useLoginGql";
 import { render, screen, waitFor } from "@testing-library/react";
-import Login from "./page";
 import user from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { useRouter } from "next/navigation";
+import { useLoginGql } from "../../hooks/login-gql/useLoginGql";
+import { LoginGql } from "./login-gql";
 
-jest.mock("../../../../hooks/login-gql/useLoginGql");
+jest.mock("../../hooks/login-gql/useLoginGql");
 
 jest.mock("next/navigation");
 
@@ -33,11 +32,11 @@ const mockUseRoute = () => {
   };
 };
 
-describe("<Login/>", () => {
+describe("<LoginGql/>", () => {
   it("should render an spinner when loading", () => {
     mockUseLoginGql({ loading: true });
     mockUseRoute();
-    render(<Login />);
+    render(<LoginGql />);
 
     const spinner = screen.queryByTestId("spinner");
 
@@ -46,7 +45,7 @@ describe("<Login/>", () => {
   it("should render an error message on error", () => {
     mockUseLoginGql({ error: true });
     mockUseRoute();
-    render(<Login />);
+    render(<LoginGql />);
 
     const error = screen.queryByTestId("p-error-login");
 
@@ -57,7 +56,7 @@ describe("<Login/>", () => {
 
     const { push } = mockUseRoute();
 
-    render(<Login />);
+    render(<LoginGql />);
 
     const emailInput =
       screen.getByTestId<HTMLInputElement>("input-email-login");
