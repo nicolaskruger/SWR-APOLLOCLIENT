@@ -22,8 +22,10 @@ const useMeGql = () => {
     },
   });
 
+  const dataType = data as { me: User };
+
   return {
-    data,
+    data: dataType,
     loading,
     error,
   };
