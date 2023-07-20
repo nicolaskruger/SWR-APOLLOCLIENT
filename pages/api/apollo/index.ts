@@ -3,6 +3,7 @@ import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import { gql } from "graphql-tag";
 import { loginRepository } from "../../utils/login/login-repository";
 import { meRepository } from "../../utils/me/me-repository";
+import { postRepository } from "../../utils/post/post-repository";
 
 const resolvers = {
   Query: {
@@ -12,6 +13,18 @@ const resolvers = {
     ) => loginRepository.login(email, password),
     me: (_: any, { token }: { token: string }) =>
       meRepository.decodeToken(token),
+  },
+  Mutation: {
+    newPost: (_: any, { text, token }: { token: string; text: string }) => {
+      const user = meRepository.decodeToken(token);
+
+      postRepository.addPost({
+        date: new Date().toISOString(),
+        id: `${Math.random()}`,
+        text,
+        userId: user.id,
+      });
+    },
   },
 };
 
@@ -29,6 +42,9 @@ const typeDefs = gql`
   type Query {
     login(email: String, password: String): Token
     me(token: String): User
+  }
+  type Mutation {
+    newPost(token: String, text: String): Boolean
   }
 `;
 
