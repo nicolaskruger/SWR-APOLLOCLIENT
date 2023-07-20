@@ -1,7 +1,26 @@
+import { gql, useQuery } from "@apollo/client";
+import { useToken } from "../token/useToken";
+
+const QUERY = gql`
+  query Me($token: String) {
+    me(token: $token) {
+      name
+      email
+      password
+      id
+      url
+    }
+  }
+`;
+
 const useMeGql = () => {
-  const data = undefined;
-  const loading = undefined;
-  const error = undefined;
+  const [token] = useToken();
+
+  const { data, loading, error } = useQuery(QUERY, {
+    variables: {
+      token: token,
+    },
+  });
 
   return {
     data,
