@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { useMeGql } from "../../hooks/me-gql/useMeGql";
 import { MeGql } from "./me-gql";
+import "@testing-library/jest-dom";
 
 jest.mock("../../hooks/me-gql/useMeGql");
 
@@ -58,6 +59,6 @@ describe("<MeQql/>", () => {
     expect(emailP?.textContent).toBe("punpun@email");
 
     expect(nameP).toBeInTheDocument();
-    expect(nameP?.textContent).toBe("punpun@email");
+    expect(nameP?.textContent).toBe("punpun");
   });
 });
