@@ -19,7 +19,7 @@ const useLoginGql = () => {
       variables: { email, password },
     });
 
-    setToken(token.data.token);
+    setToken(token.data.login.token);
   };
 
   return {
