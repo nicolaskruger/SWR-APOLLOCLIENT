@@ -5,7 +5,7 @@ import { NewPostGql } from "./new-post-gql";
 import user from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
-jest.mocked("../../hooks/new-post-gql/useNewPostGql");
+jest.mock("../../hooks/new-post-gql/useNewPostGql");
 
 type MockNewPostProps = {
   loading?: boolean;
