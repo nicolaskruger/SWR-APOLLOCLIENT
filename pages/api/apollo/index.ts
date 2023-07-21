@@ -13,6 +13,8 @@ const resolvers = {
     ) => loginRepository.login(email, password),
     me: (_: any, { token }: { token: string }) =>
       meRepository.decodeToken(token),
+    post: (_: any, { page, limit }: { page: number; limit: number }) =>
+      postRepository.getPaginatedPost(page, limit),
   },
   Mutation: {
     newPost: (_: any, { text, token }: { token: string; text: string }) => {
@@ -36,12 +38,25 @@ const typeDefs = gql`
     id: String
     url: String!
   }
+  type UserPost {
+    id: String
+    name: String
+    email: String
+    url: String
+  }
+  type PostAllInfo {
+    id: String
+    user: UserPost
+    text: String
+    date: String
+  }
   type Token {
     token: String
   }
   type Query {
     login(email: String, password: String): Token
     me(token: String): User
+    post(page: Int, limit: Int): [PostAllInfo]
   }
   type Mutation {
     newPost(token: String, text: String): Boolean

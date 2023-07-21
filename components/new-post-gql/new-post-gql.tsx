@@ -18,6 +18,7 @@ const NewPostGql = () => {
     <div>
       <form action="submit" onSubmit={handleSubmit}>
         <input
+          className="text-black"
           value={text}
           onChange={(e) => setText(e.target.value)}
           type="text"
