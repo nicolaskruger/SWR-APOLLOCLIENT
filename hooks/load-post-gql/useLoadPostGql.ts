@@ -18,7 +18,7 @@ const useLoadPostGql = () => {
   const [lastPage, setLastPage] = useState(false);
   const [page, setPage] = useState(0);
 
-  const { loading, data, fetchMore, refetch } = useQuery(QUERY, {
+  const { loading, data, fetchMore, refetch } = useQuery<PostType>(QUERY, {
     variables: {
       page,
       limit: 3,
