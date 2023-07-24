@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export type PostType = { post: { text: string; id: string }[] };
 
-const QUERY = gql`
+export const GET_POST = gql`
   query PostQuery($page: Int, $limit: Int) {
     post(page: $page, limit: $limit) {
       text
@@ -18,7 +18,7 @@ const useLoadPostGql = () => {
   const [page, setPage] = useState(0);
 
   const [get, { loading, data, fetchMore, refetch }] = useLazyQuery<PostType>(
-    QUERY,
+    GET_POST,
     {
       variables: {
         page,

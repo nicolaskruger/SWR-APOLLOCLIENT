@@ -14,7 +14,7 @@ const NewPostGql = () => {
     e.stopPropagation();
 
     await addPost(text);
-    await refetch();
+    // await refetch();
   };
 
   return (
