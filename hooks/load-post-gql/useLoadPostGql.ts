@@ -1,9 +1,8 @@
 import { useQuery } from "@apollo/client";
 import gql from "graphql-tag";
-import { type } from "os";
 import { useState } from "react";
 
-type PostType = { post: { text: string; id: string }[] };
+export type PostType = { post: { text: string; id: string }[] };
 
 const QUERY = gql`
   query PostQuery($page: Int, $limit: Int) {

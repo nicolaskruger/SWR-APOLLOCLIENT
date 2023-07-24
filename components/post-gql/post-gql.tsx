@@ -10,11 +10,14 @@ const PostGql = () => {
     <div>
       <ul>
         {data.post.map(({ id, text }) => (
-          <li key={id}>{text}</li>
+          <li data-testid="li-post-info" key={id}>
+            {text}
+          </li>
         ))}
       </ul>
       {!lastPage && (
         <button
+          data-testid="button-post-gql"
           onClick={() => {
             loadMore();
           }}
