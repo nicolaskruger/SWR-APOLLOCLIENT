@@ -1,10 +1,15 @@
+import { useEffect } from "react";
 import { useLoadPostGql } from "../../hooks/load-post-gql/useLoadPostGql";
 import { Spinner } from "../spinner/spinner";
 
 const PostGql = () => {
-  const { data, loadMore, loading, lastPage } = useLoadPostGql();
+  const { data, loadMore, loading, lastPage, fetch } = useLoadPostGql();
 
-  if (loading) return <Spinner />;
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  if (loading || !data) return <Spinner />;
 
   return (
     <div>

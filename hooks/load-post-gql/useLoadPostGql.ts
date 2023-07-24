@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import gql from "graphql-tag";
 import { useState } from "react";
 
@@ -17,12 +17,24 @@ const useLoadPostGql = () => {
   const [lastPage, setLastPage] = useState(false);
   const [page, setPage] = useState(0);
 
-  const { loading, data, fetchMore, refetch } = useQuery<PostType>(QUERY, {
-    variables: {
-      page,
-      limit: 3,
-    },
-  });
+  const [get, { loading, data, fetchMore, refetch }] = useLazyQuery<PostType>(
+    QUERY,
+    {
+      variables: {
+        page,
+        limit: 3,
+      },
+    }
+  );
+
+  const fetch = async () => {
+    await get({
+      variables: {
+        page,
+        limit: 3,
+      },
+    });
+  };
 
   const loadMore = async () => {
     const data = await fetchMore<PostType>({
@@ -42,6 +54,7 @@ const useLoadPostGql = () => {
     loadMore,
     refetch,
     lastPage,
+    fetch,
   };
 };
 

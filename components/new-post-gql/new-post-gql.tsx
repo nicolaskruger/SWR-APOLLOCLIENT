@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import { useNewPostGql } from "../../hooks/new-post-gql/useNewPostGql";
 import { Spinner } from "../spinner/spinner";
+import { useLoadPostGql } from "../../hooks/load-post-gql/useLoadPostGql";
 
 const NewPostGql = () => {
   const { addPost, loading, error } = useNewPostGql();
 
+  const { refetch } = useLoadPostGql();
   const [text, setText] = useState("");
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -12,6 +14,7 @@ const NewPostGql = () => {
     e.stopPropagation();
 
     await addPost(text);
+    await refetch();
   };
 
   return (
